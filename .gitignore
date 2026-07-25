@@ -1,0 +1,19 @@
+# Credentials and machine-specific provisioning
+.env
+*.key
+*.pem
+user-data
+meta-data
+network-config
+AdGuardHome.yaml
+
+# Backups may contain Wi-Fi credentials, password hashes, or service secrets
+backups/
+*.bak
+*.backup
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
