@@ -2,7 +2,7 @@
 
 Documentación del servidor DNS y acceso remoto instalado en un Raspberry Pi Zero 2 W.
 
-Estado registrado: 25 de julio de 2026.
+Estado verificado: 13 de agosto de 2026.
 
 ## Servicios
 
@@ -47,6 +47,17 @@ El panel de AdGuard usa el puerto `80`. SSH usa el puerto `22`. Unbound solo esc
 - [Operación y rollback](docs/operations.md)
 - [Recuperación de contraseña](docs/password-recovery.md)
 
+## Recuperación automatizada
+
+El lanzador de Windows prepara la microSD y retira el acceso temporal al terminar:
+
+```powershell
+.\scripts\Recover-RaspberryPi.cmd prepare
+.\scripts\Recover-RaspberryPi.cmd finish
+```
+
+Consulta la [guía de recuperación](docs/password-recovery.md) antes de usarlo. El Pi recibe la clave pública; la clave privada permanece en `C:\Users\x-Rau\.ssh`.
+
 ## Configuraciones públicas
 
 - [Unbound para AdGuard Home](configs/unbound/adguard-home.conf)
@@ -54,6 +65,6 @@ El panel de AdGuard usa el puerto `80`. SSH usa el puerto `22`. Unbound solo esc
 
 Los archivos de provisión, claves, contraseñas y respaldos no pertenecen a este repositorio. `.gitignore` bloquea sus nombres comunes.
 
-## Acción pendiente
+## Acceso administrativo
 
-La cuenta conserva una contraseña temporal usada durante la recuperación. Ejecuta `passwd` desde SSH y elige una contraseña privada. Después elimina la línea `passwd:` de `/boot/firmware/user-data` sin cambiar el `instance-id`; consulta la [guía de recuperación](docs/password-recovery.md).
+La cuenta `raul` usa una clave Ed25519 y conserva una contraseña para consola y sudo. SSH prefiere la clave y puede entrar sin mostrar un prompt de contraseña.
