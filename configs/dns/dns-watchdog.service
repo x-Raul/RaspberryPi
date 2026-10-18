@@ -1,0 +1,7 @@
+[Unit]
+Description=Restart AdGuard Home / Unbound when DNS stops answering
+After=AdGuardHome.service unbound.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh /usr/local/sbin/dns-watchdog.sh

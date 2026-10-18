@@ -3,13 +3,13 @@
 ## Comprobación diaria
 
 ```sh
-systemctl is-active AdGuardHome unbound tailscaled homebridge tuya-arp-watch homebridge-watchdog.timer
+systemctl is-active AdGuardHome unbound tailscaled homebridge tuya-arp-watch homebridge-watchdog.timer dns-watchdog.timer
 tailscale status
 free -h
 df -h /
 ```
 
-Las seis unidades deben devolver `active`. Tailscale debe mostrar el nodo como online.
+Las siete unidades deben devolver `active`. Tailscale debe mostrar el nodo como online.
 
 ## Pruebas DNS
 
@@ -46,6 +46,22 @@ Estadísticas:
 ```sh
 sudo unbound-control stats_noreset |
   grep -E 'total.num.queries=|total.num.cachehits=|total.num.cachemiss='
+```
+
+## Resiliencia del DNS
+
+| Medida | Archivo |
+|---|---|
+| `Restart=always` y `OOMScoreAdjust=-900` en AdGuard y Unbound | `/etc/systemd/system/{AdGuardHome,unbound}.service.d/resilience.conf` ([copias](../configs/dns)) |
+| Vigilante cada minuto: reinicia Unbound o AdGuard tras 2 fallas seguidas (máx. 1 vez cada 5 min) | [`dns-watchdog.sh`](../configs/dns/dns-watchdog.sh), `.service`, `.timer` |
+| Registro de consultas de AdGuard a 7 días (antes 90) | `querylog.interval` en `AdGuardHome.yaml`; respaldo en `/var/backups/AdGuardHome.yaml.bak-*` |
+
+El Pi Zero 2 W tiene 416 MiB de RAM. No ejecutes análisis pesados sobre `querylog.json` en el propio Pi: el 18 de octubre de 2026 uno de ellos agotó la memoria y AdGuard dejó de responder durante varios minutos. Cópialo a otra máquina.
+
+El Pi es un punto único de falla. Los clientes que usen `192.168.1.1` como DNS deben tener un DNS secundario público para no perder internet si el Pi se apaga.
+
+```sh
+journalctl -t dns-watchdog --no-pager | tail
 ```
 
 ## Tailscale

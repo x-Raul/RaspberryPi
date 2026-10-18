@@ -9,7 +9,7 @@
 | Núcleo | Homebridge 2.4.0 (lo instala el paquete apt `homebridge`) |
 | Plugin Tuya | `homebridge-tuya` 3.1.2-beta.2 (sin mantenimiento), plataforma `TuyaLan`, parcheado para Homebridge 2 |
 | Tira LED | BlitzWolf `RGBTWLight`, protocolo Tuya 3.1, MAC `cc:50:e3:14:94:e2` |
-| WLED | Retirado de `config.json` el 18 oct 2026 (estaba caído y llenaba el log). El plugin sigue instalado. |
+| WLED | `homebridge-wled-ws`, controlador en `192.168.1.88` (se apaga a veces; mientras tanto escribe un error cada ~13 s en el log) |
 
 ## Falla de octubre de 2026
 
@@ -60,7 +60,7 @@ Cambios:
 |---|---|
 | Power save del Wi-Fi apagado | `/etc/NetworkManager/conf.d/wifi-powersave-off.conf` ([copia](../configs/homebridge/wifi-powersave-off.conf)) |
 | avahi solo en `wlan0` | `allow-interfaces=wlan0` en `/etc/avahi/avahi-daemon.conf` |
-| WLED retirado | respaldo `config.json.bak-*-pre-wled-removal` |
+| WLED retirado y luego restaurado (el usuario la usa) | respaldos `config.json.bak-*-pre-wled-*` |
 | Vigilante cada 2 min | [`homebridge-watchdog.sh`](../configs/homebridge/homebridge-watchdog.sh), `.service` y `.timer` |
 | Kernel 6.18 y firmware Wi-Fi nuevos | reinicio aplicado |
 
@@ -70,6 +70,8 @@ El vigilante revisa, en orden: router alcanzable (si no, `nmcli device reconnect
 journalctl -t homebridge-watchdog --no-pager | tail
 systemctl list-timers homebridge-watchdog.timer
 ```
+
+Verificación final: con la app Casa abierta, el iPhone (`192.168.1.69`) hizo la consulta mDNS `_hap`, resolvió `192.168.1.1` por ARP y abrió la conexión HAP al puerto `51849`. Recuerda que, sin un concentrador conectado, el iPhone solo se conecta mientras la app Casa está abierta. El equipo `192.168.1.73` anuncia `_homekit`/`_sleep-proxy` pero no respondió ARP ni se conectó a Homebridge durante la prueba.
 
 ## Diagnóstico
 
