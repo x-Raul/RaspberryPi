@@ -12,6 +12,9 @@ Estado verificado: 13 de agosto de 2026.
 | Unbound | 1.22.0 | Resolución recursiva y validación DNSSEC | Activo y habilitado |
 | Tailscale | 1.98.9 | Acceso remoto privado | Activo, autorizado y habilitado |
 | OpenSSH | Debian 13 | Administración | Activo |
+| Homebridge | 2.x (apt) | HomeKit: tira BlitzWolf (Tuya) y WLED | Activo y habilitado |
+| tuya-arp-watch | local | Mantiene alcanzable la tira BlitzWolf | Activo y habilitado |
+| unattended-upgrades | Debian 13 | Actualizaciones automáticas diarias | Activo |
 
 ## Flujo DNS
 
@@ -35,7 +38,7 @@ AdGuard Home filtra las consultas. Unbound resuelve desde la raíz de DNS, guard
 
 | Interfaz | Dirección |
 |---|---|
-| LAN Wi-Fi | `192.168.1.81/24` |
+| LAN Wi-Fi | `192.168.1.1/24` (estática en NetworkManager; antes `.81`) |
 | Gateway | `192.168.1.254` |
 | Tailscale IPv4 | `100.82.214.23/32` |
 
@@ -46,6 +49,7 @@ El panel de AdGuard usa el puerto `80`. SSH usa el puerto `22`. Unbound solo esc
 - [Mapa del sistema](docs/system-map.md)
 - [Operación y rollback](docs/operations.md)
 - [Recuperación de contraseña](docs/password-recovery.md)
+- [Homebridge y tira BlitzWolf](docs/homebridge.md)
 
 ## Recuperación automatizada
 

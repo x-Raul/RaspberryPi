@@ -1,0 +1,16 @@
+// Extra origins on top of Debian's 50unattended-upgrades (stable + security).
+// Homebridge is excluded on purpose: its apt package bumps the Homebridge core
+// (1.x -> 2.x broke homebridge-tuya in Oct 2026). Update it by hand.
+Unattended-Upgrade::Origins-Pattern {
+        "origin=Debian,codename=${distro_codename}-updates";
+        "origin=Raspberry Pi Foundation,codename=${distro_codename}";
+        "site=pkgs.tailscale.com";
+};
+
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+
+// Kernel/firmware/libc updates need a reboot; do it in the quiet hours.
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-WithUsers "true";
+Unattended-Upgrade::Automatic-Reboot-Time "04:30";

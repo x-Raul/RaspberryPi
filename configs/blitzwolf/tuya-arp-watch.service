@@ -1,0 +1,16 @@
+[Unit]
+Description=Pin ARP and track IP of Tuya devices that ignore ARP (BlitzWolf LED strip)
+After=network-online.target
+Wants=network-online.target
+Before=homebridge.service
+
+[Service]
+Type=simple
+Environment=IFACE=wlan0
+EnvironmentFile=/etc/default/tuya-arp-watch
+ExecStart=/usr/bin/python3 /usr/local/sbin/tuya-arp-watch.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

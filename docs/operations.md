@@ -3,13 +3,13 @@
 ## Comprobación diaria
 
 ```sh
-systemctl is-active AdGuardHome unbound tailscaled
+systemctl is-active AdGuardHome unbound tailscaled homebridge tuya-arp-watch homebridge-watchdog.timer
 tailscale status
 free -h
 df -h /
 ```
 
-Los tres servicios deben devolver `active`. Tailscale debe mostrar el nodo como online.
+Las seis unidades deben devolver `active`. Tailscale debe mostrar el nodo como online.
 
 ## Pruebas DNS
 
@@ -81,12 +81,32 @@ AdGuard tarda cerca de ocho segundos en abrir el puerto 53 después de un reinic
 
 ## Actualizaciones
 
+`unattended-upgrades` instala a diario las actualizaciones de Debian (stable, updates, security), Raspberry Pi, Tailscale y Homebridge. Si un paquete requiere reinicio, el Pi se reinicia solo a las 04:30.
+
+Archivos (copia en [configs/apt](../configs/apt)):
+
+```text
+/etc/apt/apt.conf.d/20auto-upgrades
+/etc/apt/apt.conf.d/52unattended-upgrades-local
+```
+
+Comprobar:
+
+```sh
+sudo unattended-upgrade --dry-run --debug 2>&1 | grep -E 'Allowed origins|Packages that will be upgraded'
+systemctl list-timers 'apt-daily*'
+less /var/log/unattended-upgrades/unattended-upgrades.log
+```
+
+No cubre los plugins de Homebridge (`/var/lib/homebridge/node_modules`) ni AdGuard Home (binario en `/opt`). Actualízalos desde sus paneles.
+
+Actualización manual:
+
 ```sh
 sudo apt update
 apt list --upgradable
+sudo apt full-upgrade
 ```
-
-Revisa la lista antes de una actualización. Reinicia durante una ventana en la que puedas acceder físicamente a la microSD.
 
 ## Rollback de Unbound
 

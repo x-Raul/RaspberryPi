@@ -23,14 +23,14 @@ Router 192.168.1.254
    |
 Wi-Fi 192.168.1.0/24
    |
-Raspberry Pi 192.168.1.81
+Raspberry Pi 192.168.1.1
    |
 tailscale0 100.82.214.23/32
 ```
 
 El Pi tiene IPv6 global. Este repositorio omite esa dirección. El firewall IPv6 del router debe bloquear conexiones entrantes no solicitadas.
 
-Reserva `192.168.1.81` en el DHCP del router. La reserva no se pudo comprobar desde el Pi.
+El Pi usa la IP estática `192.168.1.1/24` (método `manual` en NetworkManager). Hasta agosto de 2026 usaba `192.168.1.81`. `raspberrypi.local` (mDNS) siempre resuelve a la dirección actual.
 
 ## Cadena DNS
 
@@ -126,7 +126,7 @@ El equipo no tiene margen para Uptime Kuma, Grafana, Prometheus o Netdata. Coloc
 1. AdGuard Home y SSH escuchan sobre IPv6 global. Revisa el firewall del router.
 2. El Pi es el único DNS local. Una falla de energía, Wi-Fi o microSD deja la red sin filtrado.
 3. `/opt/AdGuardHome` tenía permisos `0777`; AdGuard recomienda `0700`. Revisa propiedad y contenido antes de corregirlo.
-4. APT informó 143 paquetes sin actualizar. Programa una ventana de mantenimiento antes de una actualización completa.
+4. Las actualizaciones son automáticas (`unattended-upgrades`) y pueden reiniciar el Pi a las 04:30. Ver [operación](operations.md#actualizaciones).
 5. Cloud-init marca estado degradado por el módulo ausente `cc_netplan_nm_patch`; no registró errores y la red funciona.
 
 ## Respaldo previo

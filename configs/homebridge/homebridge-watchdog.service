@@ -1,0 +1,7 @@
+[Unit]
+Description=Self-heal Homebridge and BlitzWolf strip connectivity
+After=network-online.target homebridge.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh /usr/local/sbin/homebridge-watchdog.sh
